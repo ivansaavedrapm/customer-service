@@ -13,7 +13,7 @@ public class CtrlHelloWorld {
 		return "Hello World";
 	}
 
-	@GetMapping
+	@GetMapping("/otro")
 	public String helloWorld2() {
 		return "Hello World 2";
 	}
