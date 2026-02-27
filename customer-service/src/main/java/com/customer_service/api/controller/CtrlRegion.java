@@ -3,21 +3,25 @@ package com.customer_service.api.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.customer_service.api.entity.Region;
+import com.customer_service.api.service.SvcRegion;
 
 @RestController
 @RequestMapping("/region")
 public class CtrlRegion {
 	
+	@Autowired
+	SvcRegion svc;
+	
 	@GetMapping
 	public List<Region> getRegions() {
-		List<Region> regions = regionList();
-		return regions;
+		return svc.getRegions();
 	}
 	
 	@GetMapping("/{id}")
