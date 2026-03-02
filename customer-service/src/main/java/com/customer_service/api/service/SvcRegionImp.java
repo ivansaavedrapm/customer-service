@@ -15,8 +15,13 @@ public class SvcRegionImp implements SvcRegion {
 	RepoRegion repo;
 	
 	@Override
-	public List<Region> getRegions() {
-		return repo.getRegions();
+	public List<Region> findAll() {
+		return repo.findAll();
+	}
+
+	@Override
+	public List<Region> findActive() {
+		return repo.findActive();
 	}
 
 }

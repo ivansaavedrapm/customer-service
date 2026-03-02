@@ -12,6 +12,9 @@ import com.customer_service.api.entity.Region;
 public interface RepoRegion extends JpaRepository<Region, Integer>{
 
 	@Query(value ="SELECT * FROM region ORDER BY region", nativeQuery = true)
-	List<Region> getRegions();
+	List<Region> findAll();
+	
+	@Query(value ="SELECT * FROM region WHERE status = 1 ORDER BY region", nativeQuery = true)
+	List<Region> findActive();
 
 }
