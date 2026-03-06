@@ -13,4 +13,22 @@ public class DtoRegionIn {
 	@JsonProperty("tag")
 	@NotNull(message="El tag es obligatorio")
 	private String tag;
+
+	public String getRegion() {
+		return region;
+	}
+
+	public void setRegion(String region) {
+		this.region = region;
+	}
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
+	
+	
 }
