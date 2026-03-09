@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class RestExceptionHandler {
+public class RestExceptionHandler extends ResponseEntityExceptionHandler{
 
 	@ExceptionHandler(ApiException.class)
 	protected ResponseEntity<ExceptionResponse> handleApiException(ApiException exception, WebRequest request){
@@ -41,7 +42,7 @@ public class RestExceptionHandler {
 		return new ResponseEntity<>(response, response.getError());
 	}
 
-//	@Override
+	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid( MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 	    ExceptionResponse response = new ExceptionResponse();
 		   
