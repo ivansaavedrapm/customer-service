@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.customer_service.api.dto.DtoRegionIn;
 import com.customer_service.api.entity.Region;
+import com.customer_service.api.repository.RepoRegion;
 import com.customer_service.api.service.SvcRegion;
 
 import jakarta.validation.Valid;
@@ -26,6 +27,9 @@ public class CtrlRegion {
 	@Autowired
 	SvcRegion svc;
 	
+	@Autowired
+	RepoRegion repo;
+	
 	@GetMapping
 	public ResponseEntity<List<Region>> findAll() {
 //		return new ResponseEntity<>(svc.findAll(), HttpStatus.OK);
@@ -34,14 +38,14 @@ public class CtrlRegion {
 	
 	@GetMapping("/active")
 	public ResponseEntity<List<Region>> findActive() {
-		return ResponseEntity.ok(svc.findActive());
+//		return ResponseEntity.ok(svc.findActive());
+		return ResponseEntity.ok(repo.findByStatusOrderByRegionAsc(1));
 	}
 	
 	@PostMapping
 	public ResponseEntity<Void> create(@Valid @RequestBody DtoRegionIn in){
 //		svc.create(in);
-		System.out.println("Región: " + in.getRegion());
-		System.out.println("Tag: " + in.getTag());
+		repo.create(in.getRegion(), in.getTag());
 		return ResponseEntity.ok().build();
 	}
 	
@@ -49,10 +53,7 @@ public class CtrlRegion {
 	public ResponseEntity<Void> update(@Valid @RequestBody DtoRegionIn in, 
 			@PathVariable Integer id){
 //		svc.update(in, id);
-		
-		System.out.println("Región: " + in.getRegion());
-		System.out.println("Tag: " + in.getTag());
-		System.out.println("Id: " + id);
+		repo.update(id, in.getRegion(), in.getTag());
 		
 		return ResponseEntity.ok().build();
 	}
@@ -61,7 +62,10 @@ public class CtrlRegion {
 	public ResponseEntity<Void> enable(@PathVariable Integer id){
 //		svc.enable(id);
 //		svc.switchStatus(id, 1);
-		System.out.println("Id: " + id);
+		
+//		repo.enable(id);
+		repo.switchStatus(id, 1);
+		
 		return ResponseEntity.ok().build();
 	}
 
@@ -69,7 +73,10 @@ public class CtrlRegion {
 	public ResponseEntity<Void> disable(@PathVariable Integer id){
 //		svc.disable(id);
 //		svc.switchStatus(id, 0);
-		System.out.println("Id: " + id);
+		
+//		repo.disable(id);
+		repo.switchStatus(id, 0);
+		
 		return ResponseEntity.ok().build();
 	}
 	
