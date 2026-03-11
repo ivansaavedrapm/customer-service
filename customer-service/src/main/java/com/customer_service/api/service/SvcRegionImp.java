@@ -7,6 +7,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.customer_service.api.dto.DtoRegionIn;
 import com.customer_service.api.entity.Region;
 import com.customer_service.api.repository.RepoRegion;
 import com.customer_service.exception.ApiException;
@@ -22,9 +23,8 @@ public class SvcRegionImp implements SvcRegion {
 	public List<Region> findAll() {
 		try {
 			return repo.findAll();
-		} catch (Exception e) {
-			throw new ApiException(HttpStatus.CONFLICT, "El nombre de la región ya "
-					+ "está registrado");
+		} catch (DataAccessException e) {
+			throw new DBAccessException();
 		}
 	}
 
@@ -32,11 +32,80 @@ public class SvcRegionImp implements SvcRegion {
 	public List<Region> findActive() {
 		try {
 			return repo.findActive();
-		}catch(DataAccessException e) {
-			throw new DBAccessException(e);
-//			throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "Error"
-//					+ " al acceder a la base de datos");
+		} catch (DataAccessException e) {
+			throw new DBAccessException();
 		}
+	}
+
+	@Override
+	public void create(DtoRegionIn in) {
+		try {
+			repo.create(in.getRegion(), in.getTag());
+		} catch (DataAccessException e) {
+			if (e.getLocalizedMessage().contains("ux_region"))
+				throw new ApiException(HttpStatus.CONFLICT, 
+						"El nombre de la región ya está registrado");
+			
+			if (e.getLocalizedMessage().contains("ux_tag"))
+				throw new ApiException(HttpStatus.CONFLICT, 
+						"El tag de la región ya está registrado");
+
+			throw new DBAccessException();
+		}
+	}
+
+	@Override
+	public void update(DtoRegionIn in, Integer id) {
+		try {
+			validateId(id);
+			repo.update(id, in.getRegion(), in.getTag());
+		} catch (DataAccessException e) {
+			if (e.getLocalizedMessage().contains("ux_region"))
+				throw new ApiException(HttpStatus.CONFLICT, 
+						"El nombre de la región ya está registrado");
+			
+			if (e.getLocalizedMessage().contains("ux_tag"))
+				throw new ApiException(HttpStatus.CONFLICT, 
+						"El tag de la región ya está registrado");
+
+			throw new DBAccessException();
+		}
+	}
+
+	@Override
+	public void enable(Integer id) {
+		try {
+			validateId(id);
+			repo.enable(id);
+		} catch (DataAccessException e) {
+			throw new DBAccessException();
+		}
+	}
+
+	@Override
+	public void disable(Integer id) {
+		try {
+			validateId(id);
+			repo.disable(id);
+		} catch (DataAccessException e) {
+			throw new DBAccessException();
+		}
+	}
+
+	@Override
+	public void switchStatus(Integer id, Integer status) {
+		try {
+			validateId(id);
+			repo.switchStatus(id, status);
+		} catch (DataAccessException e) {
+			throw new DBAccessException();
+		}
+	}
+	
+	private void validateId(Integer id) { 
+		if(repo.findById(id).isEmpty())
+			throw new ApiException(HttpStatus.NOT_FOUND, 
+					"El id de la región no existe");
 	}
 
 }
