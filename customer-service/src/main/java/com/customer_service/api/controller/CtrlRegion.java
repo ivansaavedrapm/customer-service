@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.customer_service.api.dto.DtoRegionIn;
 import com.customer_service.api.entity.Region;
-import com.customer_service.api.repository.RepoRegion;
 import com.customer_service.api.service.SvcRegion;
 
 import jakarta.validation.Valid;
@@ -27,56 +26,38 @@ public class CtrlRegion {
 	@Autowired
 	SvcRegion svc;
 	
-	@Autowired
-	RepoRegion repo;
-	
 	@GetMapping
 	public ResponseEntity<List<Region>> findAll() {
-//		return new ResponseEntity<>(svc.findAll(), HttpStatus.OK);
 		return ResponseEntity.ok(svc.findAll());
 	}
 	
 	@GetMapping("/active")
 	public ResponseEntity<List<Region>> findActive() {
-//		return ResponseEntity.ok(svc.findActive());
-		return ResponseEntity.ok(repo.findByStatusOrderByRegionAsc(1));
+		return ResponseEntity.ok(svc.findActive());
 	}
 	
 	@PostMapping
 	public ResponseEntity<Void> create(@Valid @RequestBody DtoRegionIn in){
-//		svc.create(in);
-		repo.create(in.getRegion(), in.getTag());
+		svc.create(in);
 		return ResponseEntity.ok().build();
 	}
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> update(@Valid @RequestBody DtoRegionIn in, 
 			@PathVariable Integer id){
-//		svc.update(in, id);
-		repo.update(id, in.getRegion(), in.getTag());
-		
+		svc.update(in, id);
 		return ResponseEntity.ok().build();
 	}
 
 	@PatchMapping("/{id}/enable")
 	public ResponseEntity<Void> enable(@PathVariable Integer id){
-//		svc.enable(id);
-//		svc.switchStatus(id, 1);
-		
-//		repo.enable(id);
-		repo.switchStatus(id, 1);
-		
+		svc.enable(id);
 		return ResponseEntity.ok().build();
 	}
 
 	@PatchMapping("/{id}/disable")
 	public ResponseEntity<Void> disable(@PathVariable Integer id){
-//		svc.disable(id);
-//		svc.switchStatus(id, 0);
-		
-//		repo.disable(id);
-		repo.switchStatus(id, 0);
-		
+		svc.disable(id);
 		return ResponseEntity.ok().build();
 	}
 	
