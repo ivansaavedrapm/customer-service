@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.customer_service.api.dto.DtoCustomerIn;
 import com.customer_service.api.dto.DtoCustomerListOut;
+import com.customer_service.api.dto.DtoCustomerOut;
 
 public interface SvcCustomer {
 
