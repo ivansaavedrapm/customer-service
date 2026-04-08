@@ -18,6 +18,17 @@ public class DtoCustomerListOut {
 
 	@JsonProperty("status")
 	private Integer status;
+	
+	
+
+	public DtoCustomerListOut(Integer customer_id, String name, String surname, String rfc, Integer status) {
+		super();
+		this.customer_id = customer_id;
+		this.name = name;
+		this.surname = surname;
+		this.rfc = rfc;
+		this.status = status;
+	}
 
 	public Integer getCustomer_id() {
 		return customer_id;

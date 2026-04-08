@@ -35,6 +35,11 @@ public class SvcCustomerImageImp implements SvcCustomerImage {
 	public void upload(DtoCustomerImageIn in) {
 		try {
 			
+			// PASO -1: Validar que el cliente exista
+			if(repo.findByCustomerId(in.getCustomerId()) != null)
+				throw new ApiException(HttpStatus.NOT_FOUND, 
+						"El id del cliente no existe");
+			
 			// PASO 0: Validar prefijo del String de Base64
 			
 			// Eliminar el prefijo "data:image/png;base64," si existe
@@ -70,12 +75,10 @@ public class SvcCustomerImageImp implements SvcCustomerImage {
 			// PASO 3: Guardar la ruta en la base de datos
 			
 			// Crear la entidad CustomerImage y guardar la URL en la base de datos
-			CustomerImage customerImage = new CustomerImage();
-			customerImage.setCustomerId(in.getCustomerId());
+			CustomerImage customerImage = repo.findByCustomerId(in.getCustomerId());
 			customerImage.setImage("/customer/" + fileName);
-			customerImage.setStatus(1); 
 
-			// Guardar la ruta de la imagen
+			// Actualizamos la ruta de la imagen
 			repo.save(customerImage);
 			
 		} catch (DataAccessException e) {
