@@ -62,8 +62,10 @@ public class SvcCustomerImp implements SvcCustomer {
 		  	 Path imagePath = Paths.get(uploadDir, uploadImages, imageUrl);
 		  
 		  	 // Verifica que el archivo exista
-		   	if (!Files.exists(imagePath))
+		   	if (!Files.exists(imagePath)) {
+		   		customer.setImage(null);
 		   	    return customer;
+		   	}
 		   	
 		   	// 3. Convertir la imagen a Base64
 		  
