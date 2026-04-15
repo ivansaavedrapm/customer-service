@@ -18,32 +18,39 @@ import com.customer_service.api.dto.DtoCustomerListOut;
 import com.customer_service.api.dto.DtoCustomerOut;
 import com.customer_service.api.service.SvcCustomer;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/customer")
+@Tag(name = "Customer", description = "Administración de clientes")
 public class CtrlCustomer {
 
 	@Autowired
 	SvcCustomer svc;
 	
 	@GetMapping
+	@Operation(summary = "Consultar clientes", description = "Lista los clientes registrados en el sistema")
 	public ResponseEntity<List<DtoCustomerListOut>> findAll() {
 		return ResponseEntity.ok(svc.findAll());
 	}
 	
 	@GetMapping("/{id}")
+	@Operation(summary = "Consultar cliente", description = "Consulta el detalle de un cliente")
 	public ResponseEntity<DtoCustomerOut> getCustomer(@PathVariable Integer id){
 		return ResponseEntity.ok(svc.findById(id));
 	}
 	
 	@PostMapping
+	@Operation(summary = "Registrar cliente", description = "Registra un nuevo cliente")
 	public ResponseEntity<Void> create(@Valid @RequestBody DtoCustomerIn in){
 		svc.create(in);
 		return ResponseEntity.ok().build();
 	}
 	
 	@PutMapping("/{id}")
+	@Operation(summary = "Actualizar cliente", description = "Actualiza un cliente existente")
 	public ResponseEntity<Void> update(@Valid @RequestBody DtoCustomerIn in, 
 			@PathVariable Integer id){
 		svc.update(id, in);
@@ -51,12 +58,14 @@ public class CtrlCustomer {
 	}
 
 	@PatchMapping("/{id}/enable")
+	@Operation(summary = "Activar cliente", description = "Cambia el estatus a activado de un cliente existente")
 	public ResponseEntity<Void> enable(@PathVariable Integer id){
 		svc.enable(id);
 		return ResponseEntity.ok().build();
 	}
 
 	@PatchMapping("/{id}/disable")
+	@Operation(summary = "Desactivar cliente", description = "Cambia el estatus a desactivado de un cliente existente")
 	public ResponseEntity<Void> disable(@PathVariable Integer id){
 		svc.disable(id);
 		return ResponseEntity.ok().build();
